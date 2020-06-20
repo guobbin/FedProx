@@ -37,7 +37,25 @@ class Model(object):
         """Model function for Logistic Regression."""
         features = tf.placeholder(tf.float32, shape=[None, 784], name='features')
         labels = tf.placeholder(tf.int64, shape=[None,], name='labels')
-        logits = tf.layers.dense(inputs=features, units=self.num_classes, kernel_regularizer=tf.contrib.layers.l2_regularizer(0.001))
+
+        input_layer = tf.reshape(features, [-1, 28, 28, 1])
+        conv1 = tf.layers.conv2d(
+            inputs=input_layer,
+            filters=32,
+            kernel_size=[5, 5],
+            padding="same",
+            activation=tf.nn.relu)
+        pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
+        conv2 = tf.layers.conv2d(
+            inputs=pool1,
+            filters=64,
+            kernel_size=[5, 5],
+            padding="same",
+            activation=tf.nn.relu)
+        pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
+        pool2_flat = tf.reshape(pool2, [-1, 7 * 7 * 64])
+        dense = tf.layers.dense(inputs=pool2_flat, units=512, activation=tf.nn.relu)
+        logits = tf.layers.dense(inputs=dense, units=self.num_classes)
         predictions = {
             "classes": tf.argmax(input=logits, axis=1),
             "probabilities": tf.nn.softmax(logits, name="softmax_tensor")

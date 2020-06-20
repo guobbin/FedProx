@@ -51,7 +51,7 @@ labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$>0)']
 improv = 0
 
 for drop_rate in range(3):
-    for idx in range(5):
+    for idx in range(2):
 
         ax = plt.subplot(3, 5, 5*(drop_rate)+idx+1)
 
