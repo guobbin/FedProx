@@ -43,14 +43,12 @@ class Model(object):
             inputs=input_layer,
             filters=32,
             kernel_size=[3, 3],
-            padding="same",
             activation=tf.nn.relu)
-        pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
+        # pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
         conv2 = tf.layers.conv2d(
-            inputs=pool1,
+            inputs=conv1,
             filters=64,
             kernel_size=[3, 3],
-            padding="same",
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
         pool2_flat = tf.reshape(pool2, [-1, 12 * 12 * 64])

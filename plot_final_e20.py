@@ -39,19 +39,19 @@ def parse_log(file_name):
 
 f = plt.figure(figsize=[23, 10])
 
-log = ["cnnm", "cnnm", "cnnm", "cnnm", "sent140_772user"]
-titles = ["1", "0.001", "0.0001", "0.00001", "Sent140"]
-rounds = [100, 100, 100, 100, 800]
-mus=["1", "0.001", "0.0001", "0.00001","1"]
+log = ["cnnm", "cnnm", "cnnm", "cnnm", "cnnm"]
+titles = ["1", "0.001", "0.0001", "0.00001", "-1"]
+rounds = [100, 100, 100, 100, 100]
+mus=["1", "0.001", "0.0001", "0.00001", "-1"]
 drop_rates=[0, 0.5, 0.9]
 
-sampling_rate = [1, 1, 1, 1, 10]
+sampling_rate = [1, 1, 1, 1, 1]
 labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$>0)']
 
 improv = 0
 
 for drop_rate in range(1):
-    for idx in range(4):
+    for idx in range(5):
 
         ax = plt.subplot(3, 5, 5*(drop_rate)+idx+1)
 
@@ -109,8 +109,9 @@ for drop_rate in range(1):
         ax.set_xlim(0, rounds[idx])
 
         if sys.argv[1] == "loss":
-            if drop_rate == 0 and idx == 4:
-                plt.ylim(0.3, 1.8)
+            # if drop_rate == 0 and idx == 4:
+            #     plt.ylim(0.3, 1.8)
+            #     plt.ylim(0.2, 1.5)
             if drop_rate == 0 and idx == 1:
                 plt.ylim(0.2, 1.5)
             if drop_rate == 1 and idx == 1:
@@ -118,6 +119,7 @@ for drop_rate in range(1):
             if drop_rate == 2 and idx == 1:
                 plt.ylim(0.2, 1.5)
             if drop_rate == 2 and idx == 4:
+                plt.ylim(0.2, 4)
                 plt.ylim(0.2, 4)
             if drop_rate == 1 and idx == 4:
                 plt.ylim(0.2, 1.8)
