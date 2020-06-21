@@ -11,7 +11,7 @@ class Model(object):
     '''
     Assumes that images are 28px by 28px
     '''
-    
+
     def __init__(self, num_classes, optimizer, seed=1):
 
         # params
@@ -42,20 +42,20 @@ class Model(object):
         conv1 = tf.layers.conv2d(
             inputs=input_layer,
             filters=32,
-            kernel_size=[5, 5],
+            kernel_size=[3, 3],
             padding="same",
             activation=tf.nn.relu)
         pool1 = tf.layers.max_pooling2d(inputs=conv1, pool_size=[2, 2], strides=2)
         conv2 = tf.layers.conv2d(
             inputs=pool1,
             filters=64,
-            kernel_size=[5, 5],
+            kernel_size=[3, 3],
             padding="same",
             activation=tf.nn.relu)
         pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
-        pool2_flat = tf.reshape(pool2, [-1, 7 * 7 * 64])
+        pool2_flat = tf.reshape(pool2, [-1, 12 * 12 * 64])
 
-        h_fc1 = tf.layers.dense(inputs=pool2_flat, units=512, activation=tf.nn.relu)
+        h_fc1 = tf.layers.dense(inputs=pool2_flat, units=128, activation=tf.nn.relu)
         keep_prob1 = tf.placeholder("float")
         h_fc1_drop1 = tf.nn.dropout(h_fc1, keep_prob1)
         h_fc2 = tf.layers.dense(inputs=h_fc1_drop1, units=self.num_classes)
