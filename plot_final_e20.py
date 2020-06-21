@@ -39,19 +39,19 @@ def parse_log(file_name):
 
 f = plt.figure(figsize=[23, 10])
 
-log = ["synthetic_1_1", "mnist", "femnist", "shakespeare", "sent140_772user"]
-titles = ["Synthetic", "MNIST", "FEMNIST", "Shakespeare", "Sent140"]
-rounds = [200, 100, 200, 40, 800]
-mus=[1, 1, 1, 0.001, 0.01]
+log = ["cnnm", "cnnm", "cnnm", "cnnm", "sent140_772user"]
+titles = ["1", "0.001", "0.0001", "0.00001", "Sent140"]
+rounds = [100, 100, 100, 100, 800]
+mus=["1", "0.001", "0.0001", "0.00001","1"]
 drop_rates=[0, 0.5, 0.9]
 
-sampling_rate = [1, 1, 2, 1, 10]
+sampling_rate = [1, 1, 1, 1, 10]
 labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$>0)']
 
 improv = 0
 
-for drop_rate in range(3):
-    for idx in range(5):
+for drop_rate in range(1):
+    for idx in range(4):
 
         ax = plt.subplot(3, 5, 5*(drop_rate)+idx+1)
 
@@ -123,7 +123,7 @@ for drop_rate in range(3):
                 plt.ylim(0.2, 1.8)
 
 
-f.legend(frameon=False, loc='lower center', ncol=3, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26)  # note: different from plt.legend
+f.legend(frameon=False, loc='lower center', ncol=3, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26, labels=labels)  # note: different from plt.legend
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.12)
 f.savefig(sys.argv[1] + "_full.pdf")
