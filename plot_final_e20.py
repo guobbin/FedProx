@@ -37,95 +37,98 @@ def parse_log(file_name):
     return rounds, sim, loss, accu
 
 
-f = plt.figure(figsize=[23, 10])
+f = plt.figure(figsize=[13, 7])
 
-log = ["cnnm", "cnnm", "cnnm", "cnnm", "cnnm"]
-titles = ["1", "0.001", "0.0001", "0.00001", "-1"]
-rounds = [100, 100, 100, 100, 100]
-mus=["1", "0.001", "0.0001", "0.00001", "-1"]
+# log = ["synthetic_1_1", "mnist", "femnist", "shakespeare", "sent140_772user"]
+log = ["cnn1m"]
+# titles = ["Synthetic", "MNIST", "FEMNIST", "Shakespeare", "Sent140"]
+titles = ["MNIST"]
+# rounds = [200, 100, 200, 40, 800]
+rounds = [100, 100, 200, 40, 800]
+# mus=[1, 1, 1, 0.001, 0.01]
+mus=[1, 1, 1, 0.001, 0.01]
 drop_rates=[0, 0.5, 0.9]
 
-sampling_rate = [1, 1, 1, 1, 1]
-labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$>0)']
+sampling_rate = [1, 1, 2, 1, 10]
+labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$=1)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=0.01)']
 
 improv = 0
 
+
 for drop_rate in range(1):
-    for idx in range(5):
+    for idx in range(1):
+        for ind in range(3):
+            ax = plt.subplot(3, 1, ind+1)
 
-        ax = plt.subplot(3, 5, 5*(drop_rate)+idx+1)
-
-        if drop_rate == 0:
-            rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox_drop0_mu0")
-        else:
-            rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedavg_drop"+str(drop_rates[drop_rate]))
-        rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0")
-        rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu" + str(mus[idx]))
-
-
-        if sys.argv[1] == 'loss':
-            if drop_rate == 2 and idx == 4:
-                plt.plot(np.asarray(rounds1[:len(losses1):sampling_rate[idx]]), np.asarray(losses1)[::sampling_rate[idx]], ":", linewidth=3.0, label=labels[0], color="#ff7f0e")
-                plt.plot(np.asarray(rounds2[:len(losses2):sampling_rate[idx]]), np.asarray(losses2)[::sampling_rate[idx]], '--', linewidth=3.0, label=labels[1], color="#e377c2")
-                plt.plot(np.asarray(rounds3[:len(losses3):sampling_rate[idx]]), np.asarray(losses3)[::sampling_rate[idx]], linewidth=3.0, label=labels[2], color="#17becf")
+            if drop_rate == 0:
+                rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox_drop0_mu0")
             else:
+                rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedavg_drop"+str(drop_rates[drop_rate]))
+            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0")
+            rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu1")
+            rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.1")
+            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.01")
+
+
+
+            # if sys.argv[1] == 'loss':
+            if ind == 0:
                 plt.plot(np.asarray(rounds1[:len(losses1):sampling_rate[idx]]),
-                         np.asarray(losses1)[::sampling_rate[idx]], ":", linewidth=3.0, color="#ff7f0e")
+                         np.asarray(losses1)[::sampling_rate[idx]], ":", linewidth=1.0, color="#ff7f0e")
                 plt.plot(np.asarray(rounds2[:len(losses2):sampling_rate[idx]]),
-                         np.asarray(losses2)[::sampling_rate[idx]], '--', linewidth=3.0, color="#e377c2")
+                         np.asarray(losses2)[::sampling_rate[idx]], '--', linewidth=1.0, color="#e377c2")
                 plt.plot(np.asarray(rounds3[:len(losses3):sampling_rate[idx]]),
-                         np.asarray(losses3)[::sampling_rate[idx]], linewidth=3.0, color="#17becf")
+                         np.asarray(losses3)[::sampling_rate[idx]], linewidth=1.0, color="#17becf")
+                plt.plot(np.asarray(rounds4[:len(losses4):sampling_rate[idx]]),
+                         np.asarray(losses4)[::sampling_rate[idx]], ':',  linewidth=1.0, color="#a7becf")
+                plt.plot(np.asarray(rounds5[:len(losses5):sampling_rate[idx]]),
+                         np.asarray(losses5)[::sampling_rate[idx]], '--',  linewidth=1.0, color="#57becf")
 
-        elif sys.argv[1] == 'accuracy':
-            if drop_rate == 2 and idx == 4:
-                plt.plot(np.asarray(rounds1[:len(test_accuracies1):sampling_rate[idx]]), np.asarray(test_accuracies1)[::sampling_rate[idx]], ":", linewidth=3.0, label=labels[0], color="#ff7f0e")
-                plt.plot(np.asarray(rounds2[:len(test_accuracies2):sampling_rate[idx]]), np.asarray(test_accuracies2)[::sampling_rate[idx]], '--', linewidth=3.0, label=labels[1], color="#e377c2")
-                plt.plot(np.asarray(rounds3[:len(test_accuracies3):sampling_rate[idx]]), np.asarray(test_accuracies3)[::sampling_rate[idx]], linewidth=3.0, label=labels[2], color="#17becf")
-            else:
+            elif ind == 2:
+                plt.plot(np.asarray(rounds1[:len(sim1):sampling_rate[idx]]),
+                         np.asarray(sim1)[::sampling_rate[idx]], ":", linewidth=1.0, color="#ff7f0e")
+                plt.plot(np.asarray(rounds2[:len(sim2):sampling_rate[idx]]),
+                         np.asarray(sim2)[::sampling_rate[idx]], '--', linewidth=1.0, color="#e377c2")
+                plt.plot(np.asarray(rounds3[:len(sim3):sampling_rate[idx]]),
+                         np.asarray(sim3)[::sampling_rate[idx]], linewidth=1.0, color="#17becf")
+                plt.plot(np.asarray(rounds4[:len(sim4):sampling_rate[idx]]),
+                         np.asarray(sim4)[::sampling_rate[idx]], ':', linewidth=1.0, color="#a7becf")
+                plt.plot(np.asarray(rounds5[:len(sim5):sampling_rate[idx]]),
+                         np.asarray(sim5)[::sampling_rate[idx]], '--', linewidth=1.0, color="#57becf")
+
+            elif ind == 1:
                 plt.plot(np.asarray(rounds1[:len(test_accuracies1):sampling_rate[idx]]),
-                         np.asarray(test_accuracies1)[::sampling_rate[idx]], ":", linewidth=3.0, color="#ff7f0e")
+                         np.asarray(test_accuracies1)[::sampling_rate[idx]], ":", linewidth=1.0, color="#ff7f0e")
                 plt.plot(np.asarray(rounds2[:len(test_accuracies2):sampling_rate[idx]]),
-                         np.asarray(test_accuracies2)[::sampling_rate[idx]], '--', linewidth=3.0, color="#e377c2")
+                         np.asarray(test_accuracies2)[::sampling_rate[idx]], '--', linewidth=1.0, color="#e377c2")
                 plt.plot(np.asarray(rounds3[:len(test_accuracies3):sampling_rate[idx]]),
-                         np.asarray(test_accuracies3)[::sampling_rate[idx]], linewidth=3.0, color="#17becf")
+                         np.asarray(test_accuracies3)[::sampling_rate[idx]], linewidth=1.0, color="#17becf")
+                plt.plot(np.asarray(rounds4[:len(test_accuracies4):sampling_rate[idx]]),
+                         np.asarray(test_accuracies4)[::sampling_rate[idx]], ':', linewidth=1.0, color="#a7becf")
+                plt.plot(np.asarray(rounds5[:len(test_accuracies5):sampling_rate[idx]]),
+                         np.asarray(test_accuracies5)[::sampling_rate[idx]], '--', linewidth=1.0, color="#57becf")
 
-        plt.xlabel("# Rounds", fontsize=22)
-        plt.xticks(fontsize=17)
-        plt.yticks(fontsize=17)
+            # plt.xlabel("# Rounds", fontsize=22)
+            plt.xticks(fontsize=17)
+            plt.yticks(fontsize=17)
 
-        if sys.argv[1] == 'loss' and idx == 0:
-            plt.ylabel('Training Loss', fontsize=22)
-        elif sys.argv[1] == 'accuracy' and idx == 0:
-            plt.ylabel('Testing Accuracy', fontsize=22)
+            if ind == 0 and idx == 0:
+                plt.ylabel('Training Loss', fontsize=22)
+            elif ind == 1 and idx == 0:
+                plt.ylabel('Testing Accuracy', fontsize=22)
 
-        if drop_rate == 0:
-            plt.title(titles[idx], fontsize=22, fontweight='bold')
+            if ind == 0:
+                plt.title(titles[idx], fontsize=22, fontweight='bold')
 
-        ax.tick_params(color='#dddddd')
-        ax.spines['bottom'].set_color('#dddddd')
-        ax.spines['top'].set_color('#dddddd')
-        ax.spines['right'].set_color('#dddddd')
-        ax.spines['left'].set_color('#dddddd')
-        ax.set_xlim(0, rounds[idx])
-
-        if sys.argv[1] == "loss":
-            # if drop_rate == 0 and idx == 4:
-            #     plt.ylim(0.3, 1.8)
-            #     plt.ylim(0.2, 1.5)
-            if drop_rate == 0 and idx == 1:
-                plt.ylim(0.2, 1.5)
-            if drop_rate == 1 and idx == 1:
-                plt.ylim(0.2, 1.5)
-            if drop_rate == 2 and idx == 1:
-                plt.ylim(0.2, 1.5)
-            if drop_rate == 2 and idx == 4:
-                plt.ylim(0.2, 4)
-                plt.ylim(0.2, 4)
-            if drop_rate == 1 and idx == 4:
-                plt.ylim(0.2, 1.8)
+            ax.tick_params(color='#dddddd')
+            ax.spines['bottom'].set_color('#dddddd')
+            ax.spines['top'].set_color('#dddddd')
+            ax.spines['right'].set_color('#dddddd')
+            ax.spines['left'].set_color('#dddddd')
+            ax.set_xlim(0, rounds[idx])
 
 
-f.legend(frameon=False, loc='lower center', ncol=3, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26, labels=labels)  # note: different from plt.legend
+f.legend(frameon=False, loc='lower center', ncol=5, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26, labels=labels)  # note: different from plt.legend
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.12)
-f.savefig(sys.argv[1] + "_full.pdf")
+f.savefig("loss_accuracy_full.pdf")
