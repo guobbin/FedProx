@@ -2,6 +2,7 @@
 mnist/
 data/*
 cnnm/
+cnn1m/
 synthetic_1_1/
 log_synthetic/
 *.pdf

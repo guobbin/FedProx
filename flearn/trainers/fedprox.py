@@ -40,11 +40,27 @@ class Server(BaseFedarated):
                 global_grads = np.add(global_grads, client_grad * num)
             global_grads = global_grads * 1.0 / np.sum(np.asarray(num_samples))
 
+            lens = np.ones(len(self.latest_model), dtype=np.int)
+            for ind in range(len(lens)):
+                for d in np.array(self.latest_model[ind]).shape:
+                    lens[ind] *= d
+                if ind > 0:
+                    lens[ind] += lens[ind-1]
+            lens = np.insert(lens, 0, 0)
+
+            differences = np.zeros(len(lens)-1)
             difference = 0
             for idx in range(len(self.clients)):
-                difference += np.sum(np.square(global_grads - local_grads[idx]))
-            difference = difference * 1.0 / len(self.clients)
+                for ind in range(len(lens)-1):
+                    differences[ind] += np.sum(np.square(global_grads[lens[ind]:lens[ind+1]] -
+                                                       local_grads[idx][lens[ind]:lens[ind+1]]))
+            for ind in range(len(differences)):
+                differences[ind] = differences[ind] * 1.0 / len(self.clients)
+                difference += differences[ind]
+                differences[ind] = differences[ind] * 1.0 / (lens[ind+1] - lens[ind])
+            rates = np.array(differences / sum(differences) * 100, dtype=np.int)
             tqdm.write('gradient difference: {}'.format(difference))
+            tqdm.write('gradient difference: {}'.format(rates))
 
             indices, selected_clients = self.select_clients(i, num_clients=self.clients_per_round)  # uniform sampling
             np.random.seed(i)  # make sure that the stragglers are the same for FedProx and FedAvg
