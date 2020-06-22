@@ -30,8 +30,7 @@ class PerturbedGradientDescent(optimizer.Optimizer):
         lr_t = math_ops.cast(self._lr_t, var.dtype.base_dtype)
         mu_t = math_ops.cast(self._mu_t, var.dtype.base_dtype)
         vstar = self.get_slot(var, "vstar")
-
-        var_update = state_ops.assign_sub(var, lr_t*(grad + mu_t*(var-vstar)))
+        var_update = state_ops.assign_sub(var, lr_t*(grad + (0.01 if 'conv' in grad.name else 1)*mu_t*(var-vstar)))
 
         return control_flow_ops.group(*[var_update,])
 
@@ -42,7 +41,7 @@ class PerturbedGradientDescent(optimizer.Optimizer):
         mu_t = math_ops.cast(self._mu_t, var.dtype.base_dtype)
         vstar = self.get_slot(var, "vstar")
 
-        v_diff = state_ops.assign(vstar, mu_t * (var - vstar), use_locking=self._use_locking)
+        v_diff = state_ops.assign(vstar, (0.01 if 'conv' in grad.name else 1) * mu_t * (var - vstar), use_locking=self._use_locking)
 
         with ops.control_dependencies([v_diff]):  # run v_diff operation before scatter_add
             scaled_grad = scatter_add(vstar, indices, grad)
