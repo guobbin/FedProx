@@ -50,7 +50,7 @@ mus=[1, 1, 1, 0.001, 0.01]
 drop_rates=[0, 0.5, 0.9]
 
 sampling_rate = [1, 1, 2, 1, 10]
-labels = ['FedAvg', r'FedProx ($\mu$=0)', r'FedProx ($\mu$=1)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=0.01)']
+labels = [r'FedProx ($\mu$=0)', r'FedProx ($\mu$=1)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=0.01)', r'FedProx ($\mu$=0.001)']
 
 improv = 0
 
@@ -60,14 +60,11 @@ for drop_rate in range(1):
         for ind in range(3):
             ax = plt.subplot(3, 1, ind+1)
 
-            if drop_rate == 0:
-                rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox_drop0_mu0")
-            else:
-                rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedavg_drop"+str(drop_rates[drop_rate]))
-            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0")
-            rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu1")
-            rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.1")
-            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.01")
+            rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0")
+            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu1")
+            rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.1")
+            rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.01")
+            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.001")
 
 
 
@@ -82,7 +79,7 @@ for drop_rate in range(1):
                 plt.plot(np.asarray(rounds4[:len(losses4):sampling_rate[idx]]),
                          np.asarray(losses4)[::sampling_rate[idx]], ':',  linewidth=1.0, color="#a7becf")
                 plt.plot(np.asarray(rounds5[:len(losses5):sampling_rate[idx]]),
-                         np.asarray(losses5)[::sampling_rate[idx]], '--',  linewidth=1.0, color="#57becf")
+                         np.asarray(losses5)[::sampling_rate[idx]], '-.',  linewidth=1.0, color="#57becf")
 
             elif ind == 2:
                 plt.plot(np.asarray(rounds1[:len(sim1):sampling_rate[idx]]),
@@ -94,7 +91,7 @@ for drop_rate in range(1):
                 plt.plot(np.asarray(rounds4[:len(sim4):sampling_rate[idx]]),
                          np.asarray(sim4)[::sampling_rate[idx]], ':', linewidth=1.0, color="#a7becf")
                 plt.plot(np.asarray(rounds5[:len(sim5):sampling_rate[idx]]),
-                         np.asarray(sim5)[::sampling_rate[idx]], '--', linewidth=1.0, color="#57becf")
+                         np.asarray(sim5)[::sampling_rate[idx]], '-.', linewidth=1.0, color="#57becf")
 
             elif ind == 1:
                 plt.plot(np.asarray(rounds1[:len(test_accuracies1):sampling_rate[idx]]),
@@ -106,7 +103,7 @@ for drop_rate in range(1):
                 plt.plot(np.asarray(rounds4[:len(test_accuracies4):sampling_rate[idx]]),
                          np.asarray(test_accuracies4)[::sampling_rate[idx]], ':', linewidth=1.0, color="#a7becf")
                 plt.plot(np.asarray(rounds5[:len(test_accuracies5):sampling_rate[idx]]),
-                         np.asarray(test_accuracies5)[::sampling_rate[idx]], '--', linewidth=1.0, color="#57becf")
+                         np.asarray(test_accuracies5)[::sampling_rate[idx]], '-.', linewidth=1.0, color="#57becf")
 
             # plt.xlabel("# Rounds", fontsize=22)
             plt.xticks(fontsize=17)
@@ -131,4 +128,4 @@ for drop_rate in range(1):
 f.legend(frameon=False, loc='lower center', ncol=5, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26, labels=labels)  # note: different from plt.legend
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.12)
-f.savefig("loss_accuracy_full.pdf")
+f.savefig("loss_accuracy_full_"+log[0]+'.pdf')
