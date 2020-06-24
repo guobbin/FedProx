@@ -37,7 +37,7 @@ def parse_log(file_name):
     return rounds, sim, loss, accu
 
 
-f = plt.figure(figsize=[13, 7])
+f = plt.figure(figsize=[13, 20])
 
 # log = ["synthetic_1_1", "mnist", "femnist", "shakespeare", "sent140_772user"]
 log = ["cnn2m"]
@@ -105,16 +105,17 @@ for drop_rate in range(1):
                          np.asarray(test_accuracies5)[::sampling_rate[idx]], '-.', linewidth=1.0, color="#57becf")
 
             # plt.xlabel("# Rounds", fontsize=22)
-            plt.xticks(fontsize=17)
-            plt.yticks(fontsize=17)
+            plt.xticks(fontsize=7)
+            plt.yticks(fontsize=7)
 
             if ind == 0 and idx == 0:
-                plt.ylabel('Training Loss', fontsize=22)
+                plt.ylabel('Training Loss', fontsize=10)
             elif ind == 1 and idx == 0:
-                plt.ylabel('Testing Accuracy', fontsize=22)
-
+                plt.ylabel('Testing Accuracy', fontsize=10)
+            elif ind == 2 and idx == 0:
+                plt.ylabel('Dissimilar', fontsize=10)
             if ind == 0:
-                plt.title(titles[idx], fontsize=22, fontweight='bold')
+                plt.title(titles[idx], fontsize=10, fontweight='bold')
 
             ax.tick_params(color='#dddddd')
             ax.spines['bottom'].set_color('#dddddd')
@@ -124,7 +125,7 @@ for drop_rate in range(1):
             ax.set_xlim(0, rounds[idx])
 
 
-f.legend(frameon=False, loc='lower center', ncol=5, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=26, labels=labels)  # note: different from plt.legend
+f.legend(frameon=False, loc='lower center', ncol=5, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=20, labels=labels)  # note: different from plt.legend
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.12)
 f.savefig("loss_accuracy_full_"+log[0]+'.pdf')
