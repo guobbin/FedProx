@@ -44,13 +44,13 @@ log = ["cnn2m"]
 # titles = ["Synthetic", "MNIST", "FEMNIST", "Shakespeare", "Sent140"]
 titles = ["MNIST"]
 # rounds = [200, 100, 200, 40, 800]
-rounds = [100, 100, 200, 40, 800]
+rounds = [200, 100, 200, 40, 800]
 # mus=[1, 1, 1, 0.001, 0.01]
 mus=[1, 1, 1, 0.001, 0.01]
 drop_rates=[0, 0.5, 0.9]
 
 sampling_rate = [1, 1, 2, 1, 10]
-labels = [r'FedProx ($\mu$=0)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=0.001)', r'FedProx ($\mu$=0.10.001)', r'FedProx ($\mu$=0.0010.1)']
+labels = [r'FedProx ($\mu$=0)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=00.1)', r'FedProx ($\mu$=0.10.001)', r'FedProx ($\mu$=0.0010.1)']
 
 improv = 0
 
@@ -59,11 +59,11 @@ for drop_rate in range(1):
     for idx in range(1):
         for ind in range(3):
             ax = plt.subplot(3, 1, ind+1)
-            rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0")
-            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.1")
-            rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.001")
-            rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.10.001")
-            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.0010.1")
+            rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0")
+            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.1")
+            rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu00.1")
+            rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.10.001")
+            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.0010.1")
 
 
 
@@ -128,4 +128,4 @@ for drop_rate in range(1):
 f.legend(frameon=False, loc='lower center', ncol=5, prop=dict(weight='bold'), borderaxespad=-0.3, fontsize=20, labels=labels)  # note: different from plt.legend
 plt.tight_layout()
 plt.subplots_adjust(bottom=0.12)
-f.savefig("loss_accuracy_full_"+log[0]+'.pdf')
+f.savefig("loss_accuracy_full_"+log[0]+'200.pdf')
