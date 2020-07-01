@@ -26,3 +26,16 @@ def iid_divide(l, g):
     for i in range(num_big_groups):
         glist.append(l[bi+group_size*i:bi+group_size*(i+1)])
     return glist
+
+
+def smooth(arr, weight=0.85):
+    if len(arr) == 0:
+        return arr
+    scalar = arr
+    last = scalar[0]
+    smoothed = []
+    for point in scalar:
+        smoothed_val = last * weight + (1 - weight) * point
+        smoothed.append(smoothed_val)
+        last = smoothed_val
+    return smoothed
