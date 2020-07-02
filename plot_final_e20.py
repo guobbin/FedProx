@@ -63,7 +63,7 @@ for drop_rate in range(1):
         for ind in range(3):
             ax = plt.subplot(3, 1, ind+1)
             rounds1, sim1, losses1, test_accuracies1 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0")
-            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox200_drop"+str(drop _rates[drop_rate])+"_mu0.1")
+            rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.1")
             rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu00.1")
             rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.10")
             rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.01")
