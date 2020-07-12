@@ -10,6 +10,7 @@ from flearn.utils.tf_utils import process_grad, process_sparse_grad
 class Server(BaseFedarated):
     def __init__(self, params, learner, dataset):
         print('Using Federated prox to Train')
+        self.params = params
         self.inner_opt_mtd = PerturbedGradientDescent
         super(Server, self).__init__(params, learner, dataset)
 
@@ -26,6 +27,10 @@ class Server(BaseFedarated):
                 tqdm.write('At round {} accuracy: {}'.format(i, np.sum(stats[3])*1.0/np.sum(stats[2])))  # testing accuracy
                 tqdm.write('At round {} training accuracy: {}'.format(i, np.sum(stats_train[3])*1.0/np.sum(stats_train[2])))
                 tqdm.write('At round {} training loss: {}'.format(i, np.dot(stats_train[4], stats_train[2])*1.0/np.sum(stats_train[2])))
+                with self.client_model.graph.as_default():
+                    mu = self.client_model.sess.run(self.client_model.mu)
+                tqdm.write('mu = {},{}'.format(mu, 0.1-mu))
+
 
             model_len = process_grad(self.latest_model).size
             global_grads = np.zeros(model_len)
@@ -69,6 +74,8 @@ class Server(BaseFedarated):
             csolns = [] # buffer for receiving client solutions
 
             self.client_model.optimizer.set_params(self.latest_model, self.client_model)
+            with self.client_model.graph.as_default():
+                self.client_model.sess.run(tf.assign(self.client_model.mu, 0.1 if sum(rates[0:4]) > sum(rates[4:8]) else 0))
             for idx, c in enumerate(selected_clients.tolist()):
                 # communicate the latest model
                 c.set_params(self.latest_model)

@@ -53,7 +53,7 @@ drop_rates = [0, 0.5, 0.9]
 sampling_rate = [1, 1, 2, 1, 10]
 smooth_weight = 0.90
 
-labels = [r'FedProx ($\mu$=0)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=00.1)', r'FedProx ($\mu$=0.10)', r'FedProx ($\mu$=0.01)']
+labels = [r'FedProx ($\mu$=0)', r'FedProx ($\mu$=0.1)', r'FedProx ($\mu$=00.1)', r'FedProx ($\mu$=0.10)', r'FedProx ($\mu$=00.10.10)']
 
 improv = 0
 
@@ -66,7 +66,7 @@ for drop_rate in range(1):
             rounds2, sim2, losses2, test_accuracies2 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.1")
             rounds3, sim3, losses3, test_accuracies3 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu00.1")
             rounds4, sim4, losses4, test_accuracies4 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu0.10")
-            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox_drop"+str(drop_rates[drop_rate])+"_mu0.01")
+            rounds5, sim5, losses5, test_accuracies5 = parse_log(log[idx] + "/fedprox200_drop"+str(drop_rates[drop_rate])+"_mu00.10.10")
 
 
 
