@@ -12,17 +12,21 @@ class Model(object):
     Assumes that images are 28px by 28px
     '''
 
-    def __init__(self, num_classes, optimizer, seed=1):
+    def __init__(self, params, optimizer_mtd, seed=1):
 
         # params
-        self.num_classes = num_classes
-
+        self.num_classes, = params['model_params']
         # create computation graph        
         self.graph = tf.Graph()
         with self.graph.as_default():
             tf.set_random_seed(123+seed)
-            self.features, self.labels, self.train_op, self.grads, self.eval_metric_ops, self.loss, self.keep_prob1, self.keep_prob2 = self.create_model(optimizer)
+            self.mu = tf.Variable(params['mu'], trainable=False)
+            self.optimizer = optimizer_mtd(params['learning_rate'], self.mu)
+            self.features, self.labels, self.train_op, self.grads, \
+            self.eval_metric_ops, self.loss, self.keep_prob1, self.keep_prob2 = self.create_model(self.optimizer)
             self.saver = tf.train.Saver()
+        # writer = tf.summary.FileWriter("./logs/simple_example.log", self.graph)
+        # writer.close()
         self.sess = tf.Session(graph=self.graph)
 
         # find memory footprint and compute cost of the model
@@ -63,7 +67,7 @@ class Model(object):
             "classes": tf.argmax(input=h_fc1_drop2, axis=1),
             "probabilities": tf.nn.softmax(h_fc1_drop2, name="softmax_tensor")
             }
-        loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=h_fc2)
+        loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=h_fc1_drop2)
 
         grads_and_vars = optimizer.compute_gradients(loss)
         grads, _ = zip(*grads_and_vars)

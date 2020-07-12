@@ -13,7 +13,7 @@ class BaseFedarated(object):
 
         # create worker nodes
         tf.reset_default_graph()
-        self.client_model = learner(*params['model_params'], self.inner_opt, self.seed)
+        self.client_model = learner(params, self.inner_opt_mtd, self.seed)
         self.clients = self.setup_clients(dataset, self.client_model)
         print('{} Clients in Total'.format(len(self.clients)))
         self.latest_model = self.client_model.get_params()

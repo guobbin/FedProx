@@ -10,7 +10,7 @@ from flearn.utils.tf_utils import process_grad, process_sparse_grad
 class Server(BaseFedarated):
     def __init__(self, params, learner, dataset):
         print('Using Federated prox to Train')
-        self.inner_opt = PerturbedGradientDescent(params['learning_rate'], params['mu'])
+        self.inner_opt_mtd = PerturbedGradientDescent
         super(Server, self).__init__(params, learner, dataset)
 
     def train(self):
@@ -68,13 +68,12 @@ class Server(BaseFedarated):
 
             csolns = [] # buffer for receiving client solutions
 
-            self.inner_opt.set_params(self.latest_model, self.client_model)
-
+            self.client_model.optimizer.set_params(self.latest_model, self.client_model)
             for idx, c in enumerate(selected_clients.tolist()):
                 # communicate the latest model
                 c.set_params(self.latest_model)
 
-                total_iters = int(self.num_epochs * c.num_samples / self.batch_size)+2 # randint(low,high)=[low,high)
+                total_iters = int(self.num_epochs * c.num_samples / self.batch_size)+2  # randint(low,high)=[low,high)
 
                 # solve minimization locally
                 if c in active_clients:

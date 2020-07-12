@@ -8,7 +8,7 @@ import tensorflow as tf
 
 class PerturbedGradientDescent(optimizer.Optimizer):
     """Implementation of Perturbed Gradient Descent, i.e., FedProx optimizer"""
-    def __init__(self, learning_rate=0.001, mu=0.01, use_locking=False, name="PGD"):
+    def __init__(self, learning_rate=0.001, mu=0.01, use_locking=False, name="PGD"):#0
         super(PerturbedGradientDescent, self).__init__(use_locking, name)
         self._lr = learning_rate
         self._mu = mu
@@ -17,16 +17,16 @@ class PerturbedGradientDescent(optimizer.Optimizer):
         self._lr_t = None
         self._mu_t = None
 
-    def _prepare(self):
+    def _prepare(self):#2
         self._lr_t = ops.convert_to_tensor(self._lr, name="learning_rate")
         self._mu_t = ops.convert_to_tensor(self._mu, name="prox_mu")
 
-    def _create_slots(self, var_list):
+    def _create_slots(self, var_list):#1
         # Create slots for the global solution.
         for v in var_list:
             self._zeros_slot(v, "vstar", self._name)
 
-    def _apply_dense(self, grad, var):
+    def _apply_dense(self, grad, var):#3
         lr_t = math_ops.cast(self._lr_t, var.dtype.base_dtype)
         mu_t = math_ops.cast(self._mu_t, var.dtype.base_dtype)
         vstar = self.get_slot(var, "vstar")
@@ -34,7 +34,6 @@ class PerturbedGradientDescent(optimizer.Optimizer):
 
         return control_flow_ops.group(*[var_update,])
 
-    
     def _apply_sparse_shared(self, grad, var, indices, scatter_add):
 
         lr_t = math_ops.cast(self._lr_t, var.dtype.base_dtype)
@@ -53,9 +52,9 @@ class PerturbedGradientDescent(optimizer.Optimizer):
         return self._apply_sparse_shared(
         grad.values, var, grad.indices,
         lambda x, i, v: state_ops.scatter_add(x, i, v))
-    
 
-    def set_params(self, cog, client):
+
+    def set_params(self, cog, client):#4
         with client.graph.as_default():
             all_vars = tf.trainable_variables()
             for variable, value in zip(all_vars, cog):
