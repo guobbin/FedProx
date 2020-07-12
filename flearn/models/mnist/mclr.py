@@ -16,7 +16,7 @@ class Model(object):
 
         # params
         self.num_classes, = params['model_params']
-        # create computation graph        
+        # create computation graph
         self.graph = tf.Graph()
         with self.graph.as_default():
             tf.set_random_seed(123+seed)
@@ -57,15 +57,15 @@ class Model(object):
         pool2 = tf.layers.max_pooling2d(inputs=conv2, pool_size=[2, 2], strides=2)
         pool2_flat = tf.reshape(pool2, [-1, 12 * 12 * 64])
 
-        h_fc1 = tf.layers.dense(inputs=pool2_flat, units=128, activation=tf.nn.relu)
         keep_prob1 = tf.placeholder("float")
-        h_fc1_drop1 = tf.nn.dropout(h_fc1, keep_prob1)
-        h_fc2 = tf.layers.dense(inputs=h_fc1_drop1, units=self.num_classes)
+        h_fc1_drop1 = tf.nn.dropout(pool2_flat, keep_prob1)
+        h_fc1 = tf.layers.dense(inputs=h_fc1_drop1, units=128, activation=tf.nn.relu)
         keep_prob2 = tf.placeholder("float")
-        h_fc1_drop2 = tf.nn.dropout(h_fc2, keep_prob2)
+        h_fc1_drop2 = tf.nn.dropout(h_fc1, keep_prob2)
+        h_fc2 = tf.layers.dense(inputs=h_fc1_drop2, units=self.num_classes)
         predictions = {
-            "classes": tf.argmax(input=h_fc1_drop2, axis=1),
-            "probabilities": tf.nn.softmax(h_fc1_drop2, name="softmax_tensor")
+            "classes": tf.argmax(input=h_fc2, axis=1),
+            "probabilities": tf.nn.softmax(h_fc2, name="softmax_tensor")
             }
         loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=h_fc1_drop2)
 
