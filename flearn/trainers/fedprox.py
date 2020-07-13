@@ -59,8 +59,8 @@ class Server(BaseFedarated):
                 difference += differences[ind]
                 differences[ind] = differences[ind] * 1.0 / (lens[ind+1] - lens[ind])
             rates = np.array(differences / sum(differences) * 100, dtype=np.int)
-            tqdm.write('gradient difference: {}'.format(difference))
-            tqdm.write('gradient difference: {}'.format(rates))
+            tqdm.write('gradient difference: {}'.forgitmat(difference))
+            tqdm.write('gradient difference rates: {}'.format(rates))
 
             indices, selected_clients = self.select_clients(i, num_clients=self.clients_per_round)  # uniform sampling
             np.random.seed(i)  # make sure that the stragglers are the same for FedProx and FedAvg
