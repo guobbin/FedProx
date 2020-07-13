@@ -23,6 +23,8 @@ class Model(object):
             tf.set_random_seed(123+seed)
             self.features, self.labels, self.train_op, self.grads, self.eval_metric_ops, self.loss, self.keep_prob1, self.keep_prob2 = self.create_model(optimizer)
             self.saver = tf.train.Saver()
+        # writer = tf.summary.FileWriter("./logs/cnn3.log", self.graph)
+        # writer.close()
         self.sess = tf.Session(graph=self.graph)
 
         # find memory footprint and compute cost of the model
