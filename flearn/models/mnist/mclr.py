@@ -25,7 +25,7 @@ class Model(object):
             self.features, self.labels, self.train_op, self.grads, \
             self.eval_metric_ops, self.loss, self.keep_prob1, self.keep_prob2 = self.create_model(self.optimizer)
             self.saver = tf.train.Saver()
-        # writer = tf.summary.FileWriter("./logs/simple_example.log", self.graph)
+        # writer = tf.summary.FileWriter("./logs/cnn3.log", self.graph)
         # writer.close()
         self.sess = tf.Session(graph=self.graph)
 
@@ -67,7 +67,7 @@ class Model(object):
             "classes": tf.argmax(input=h_fc2, axis=1),
             "probabilities": tf.nn.softmax(h_fc2, name="softmax_tensor")
             }
-        loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=h_fc1_drop2)
+        loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=h_fc2)
 
         grads_and_vars = optimizer.compute_gradients(loss)
         grads, _ = zip(*grads_and_vars)
